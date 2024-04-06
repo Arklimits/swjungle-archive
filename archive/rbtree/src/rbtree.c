@@ -35,7 +35,7 @@ void delete_rbtree(rbtree *t) {
   free(t);
   t = NULL;
 
-  printf("SUCEESS: delete_rbtree done\n");
+  printf("SUCEESS: delete_rbtree\n");
 }
 
 node_t *rbtree_insert(rbtree *t, const key_t key) {
@@ -68,6 +68,7 @@ node_t *rbtree_insert(rbtree *t, const key_t key) {
   if (node == t->nil)
     t->root = temp;
 
+  printf("SUCEESS: rbtree_insert\n");
   return t->root;
 }
 
@@ -98,6 +99,7 @@ node_t *rbtree_max(const rbtree *t) {
 
 int rbtree_erase(rbtree *t, node_t *p) {
   // TODO: implement erase
+  printf("SUCCESS: rbtree_erase\n");
   return 0;
 }
 
