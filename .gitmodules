@@ -1,3 +1,0 @@
-[submodule "archive/rbtree"]
-	path = archive/rbtree
-	url = https://github.com/Arklimits/swjungle-rbtree
