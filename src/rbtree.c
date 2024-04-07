@@ -5,10 +5,10 @@
 rbtree *new_rbtree(void) {
   rbtree *p = (rbtree *)calloc(1, sizeof(rbtree));
 
-  node_t *NIL = (node_t *)calloc(1, sizeof(node_t)); // NIL 생성
+  node_t *NIL = (node_t *)calloc(1, sizeof(node_t));
   NIL->color = RBTREE_BLACK;
   
-  p->root = p->nil = NIL; // NIL 할당
+  p->root = p->nil = NIL;
 
   printf("SUCEESS: new_rbtree(%x)\n", p);
   return p;
@@ -26,7 +26,6 @@ void delete(rbtree *t, node_t *p){
 }
 
 void delete_rbtree(rbtree *t) {
-  // TODO: reclaim the tree nodes's memory
   if (t->root != t->nil)
     delete(t, t->root);
 
@@ -55,10 +54,9 @@ node_t *rbtree_travel(const rbtree *t, node_t *p){
 }
 
 node_t *rbtree_insert(rbtree *t, const key_t key) {
-  // TODO: implement insert
   node_t *temp = (node_t *)calloc(1, sizeof(node_t));
-
   node_t *node = t->root;
+  
   while (node != t->nil){
     if (key < node->key){
       if (node->left == t->nil){
@@ -89,7 +87,6 @@ node_t *rbtree_insert(rbtree *t, const key_t key) {
 }
 
 node_t *rbtree_find(const rbtree *t, const key_t key) {
-  // TODO: implement find
   node_t *node = t->root;
   while (node != t->nil){
     if (key == node->key){
@@ -106,7 +103,6 @@ node_t *rbtree_find(const rbtree *t, const key_t key) {
 }
 
 node_t *rbtree_min(const rbtree *t) {
-  // TODO: implement find
   node_t *node = t->root;
 
   while (node->left != t->nil)
@@ -117,7 +113,6 @@ node_t *rbtree_min(const rbtree *t) {
 }
 
 node_t *rbtree_max(const rbtree *t) {
-  // TODO: implement find
   node_t *node = t->root;
 
   while (node->right != t->nil)
