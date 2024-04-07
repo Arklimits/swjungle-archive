@@ -85,18 +85,31 @@ node_t *rbtree_find(const rbtree *t, const key_t key) {
     else if (key > node->key)
       node = node->right;
   }
-  printf("FAILED: rbtree_find(NULL)\n");
+  printf("FAILED: rbtree_find->%d\n", key);
   return NULL;
 }
 
 node_t *rbtree_min(const rbtree *t) {
   // TODO: implement find
-  return t->root;
+  node_t *node = t->root;
+
+  while (node->left != t->nil)
+    node = node->left;
+  
+
+  printf("SUCCES: rbtree_min(%x)->%d\n", node, node->key);
+  return node;
 }
 
 node_t *rbtree_max(const rbtree *t) {
   // TODO: implement find
-  return t->root;
+  node_t *node = t->root;
+
+  while (node->right != t->nil)
+    node = node->right;
+
+  printf("SUCCES: rbtree_max(%x)->%d\n", node, node->key);
+  return node;
 }
 
 int rbtree_erase(rbtree *t, node_t *p) {
@@ -154,7 +167,7 @@ int rbtree_erase(rbtree *t, node_t *p) {
 
   replace->parent = node_parent;
 
-  printf("SUCCESS: rbtree_remove(%x)->%d\n", replace, replace->key);
+  printf("SUCCESS: rbtree_erase(%x)->%d\n", node, node->key);
   free(node);
   node=NULL;
 
