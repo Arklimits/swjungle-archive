@@ -4,12 +4,11 @@
 
 rbtree *new_rbtree(void) {
   rbtree *p = (rbtree *)calloc(1, sizeof(rbtree));
-  // TODO: initialize struct if needed
-  node_t *NIL = (node_t *)calloc(1, sizeof(node_t));
 
+  node_t *NIL = (node_t *)calloc(1, sizeof(node_t)); // NIL 생성
   NIL->color = RBTREE_BLACK;
-
-  p->root = p->nil = NIL;
+  
+  p->root = p->nil = NIL; // NIL 할당
 
   printf("SUCEESS: new_rbtree(%x)\n", p);
   return p;
@@ -21,7 +20,7 @@ void delete(rbtree *t, node_t *p){
   if (p->right != t->nil)
       delete(t, p->right);
 
-  printf("SUCEESS: delete(%x)\n", p);
+  printf("SUCEESS: delete_node(%x)\n", p);
   free(p);
   p = NULL;
 }
@@ -36,6 +35,23 @@ void delete_rbtree(rbtree *t) {
   t->nil = NULL;
   free(t);
   t = NULL;
+}
+
+node_t *rbtree_travel(const rbtree *t, node_t *p){
+  node_t *node = p->right;
+
+  if (node == t->nil){
+    node = p;
+    while (node != t->nil){
+      if (node->parent->right == node)
+        node = node->parent;
+      else
+        return node->parent;
+    }
+  }
+  while (node->left != t->nil)
+    node = node->left;
+  return node;
 }
 
 node_t *rbtree_insert(rbtree *t, const key_t key) {
@@ -95,7 +111,6 @@ node_t *rbtree_min(const rbtree *t) {
 
   while (node->left != t->nil)
     node = node->left;
-  
 
   printf("SUCCES: rbtree_min(%x)->%d\n", node, node->key);
   return node;
@@ -120,23 +135,7 @@ int rbtree_erase(rbtree *t, node_t *p) {
 
   if (p->left != t->nil && p->right != t->nil)
   {
-    if (node == t->nil){
-      node = p;
-        while (1){
-          if (node->parent->right == node)
-            node = node->parent;
-          else{
-            node = node->parent;
-            break;
-          }
-        }
-    }
-  else{
-    node = p->right;
-    while (node->left != t->nil)
-      node = node->left;
-  }
-
+    node = rbtree_travel(t, p);
     replace = node->right;
     p->key = node->key;
   }
@@ -176,5 +175,17 @@ int rbtree_erase(rbtree *t, node_t *p) {
 
 int rbtree_to_array(const rbtree *t, key_t *arr, const size_t n) {
   // TODO: implement to_array
+  node_t *node = rbtree_min(t);
+  arr[0] = node->key;
+
+  for (int i=1;i<n;i++){
+    if (node == t->nil)
+      break;
+    node = rbtree_travel(t, node);
+    if (node == t->nil)
+      break;
+    arr[i] = node->key;
+  }
+  
   return 0;
 }
