@@ -37,19 +37,20 @@ void delete_rbtree(rbtree *t) {
 }
 
 node_t *rbtree_travel(const rbtree *t, node_t *p) {
-  node_t *node = p->right;
+  node_t *node = p->right;                        // 노드 오른쪽 자식부터 시작
 
-  if (node == t->nil){
-    node = p;
+  if (node == t->nil){                            // 노드가 오른쪽 자식이 없을 경우
+    node = p;                                     // 노드에서 다시 시작
     while (node != t->nil){
-      if (node->parent->right == node)
-        node = node->parent;
+      if (node->parent->right == node)            // 노드가 오른쪽 자식일 경우
+        node = node->parent;                      // 노드가 왼쪽 자식일 때까지 부모로 거슬러 올라감
       else
-        return node->parent;
+        return node->parent;                      
     }
   }
-  while (node->left != t->nil)
+  while (node->left != t->nil)                    // 그 외에는 가장 작은 값을 반환
     node = node->left;
+
   return node;
 }
 
@@ -57,41 +58,44 @@ void left_rotate(rbtree *t, node_t *node) {
   node_t *parent = p->parent;
   node_t *grand_parent = parent->parent;
 
-  node->parent = grand_parent;
-  if (parent == t->root)
+  node->parent = grand_parent;                    // 노드와 조부모를 양방향 연결
+  if (parent == t->root)                          // 부모가 루트일 경우 노드를 루트로 변경
     t->root = node;
   else if (grand_parent->left == parent)
     grand_parent->left = node;
   else
     grand_parent->right = node;
   
-  parent->parent = node;
-  parent->right = node->left;
-  node->left->parent = parent;
-  node->left = parent;
+  parent->parent = node;                          // 노드를 부모의 부모로 변경
+  parent->right = node->left;                     // 부모의 오른쪽 자식을 노드 왼쪽 자식으로
+  node->left->parent = parent;                    // 노드 왼쪽 자식에게 부모 양도
+  node->left = parent;                            // 부모를 노드 오른쪽 자식으로 변경
 }
 
 void right_rotate(rbtree *t, node_t *node) {
   node_t *parent = p->parent;
   node_t *grand_parent = parent->parent;
 
-  node->parent = grand_parent;
-  if (parent == t->root)
+  node->parent = grand_parent;                    // 노드와 조부모를 양방향 연결
+  if (parent == t->root)                          // 부모가 루트일 경우 노드를 루트로 변경
     t->root = node;
   else if (grand_parent->left == parent)
     grand_parent->left = node;
   else
     grand_parent->right = node;
 
-  parent->parent = node;
-  parent->left = node->right;
-  node->right->parent = parent;
-  node->right = parent;
+  parent->parent = node;                          // 노드를 부모의 부모로 변경
+  parent->left = node->right;                     // 부모의 왼쪽 자식을 노드 오른쪽 자식으로
+  node->right->parent = parent;                   // 노드 오른쪽 자식에게 부모 양도
+  node->right = parent;                           // 부모를 노드 오른쪽 자식으로 변경
 }
 
 node_t *rbtree_insert_fixup(rbtree *t, node_t *node){
   node_t *parent = node->parent;
   node_t *parent_parent = node->parent->parent;
+  node_t *uncle;
+  int is_left = (node == parent->left);           // 노드가 오른쪽 자식인지 판별
+  int is_parent_is_left;                          // 부모가 오른쪽 자식인지 판별
 
 }
 
@@ -116,13 +120,13 @@ node_t *rbtree_insert(rbtree *t, const key_t key) {
     }
   }
 
-  temp->color = RBTREE_RED;
+  temp->color = RBTREE_RED;                       // 노드 생성 시 항상 red로 설정
   temp->key = key;
   temp->parent = node;
-  temp->left = temp->right = t->nil;
+  temp->left = temp->right = t->nil;              // 노드 생성 시 leaf를 nil 노드로 설정
 
-  if (node == t->nil)
-      t->root = temp;
+  if (node == t->nil)                             // 비어있는 루트일 경우 노드를 루트로 설정
+    t->root = temp;
 
   rbtree_insert_fixup(t, temp);
   
