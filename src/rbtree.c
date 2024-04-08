@@ -37,73 +37,124 @@ void delete_rbtree(rbtree *t) {
 }
 
 node_t *rbtree_travel(const rbtree *t, node_t *p) {
-  node_t *node = p->right;                        // 노드 오른쪽 자식부터 시작
+  node_t *node = p->right;                          // 노드 오른쪽 자식부터 시작
 
-  if (node == t->nil){                            // 노드가 오른쪽 자식이 없을 경우
-    node = p;                                     // 노드에서 다시 시작
+  if (node == t->nil){                              // 노드가 오른쪽 자식이 없을 경우
+    node = p;                                       // 노드에서 다시 시작
     while (node != t->nil){
-      if (node->parent->right == node)            // 노드가 오른쪽 자식일 경우
-        node = node->parent;                      // 노드가 왼쪽 자식일 때까지 부모로 거슬러 올라감
+      if (node->parent->right == node)              // 노드가 오른쪽 자식일 경우
+        node = node->parent;                        // 노드가 왼쪽 자식일 때까지 부모로 거슬러 올라감
       else
         return node->parent;                      
     }
   }
-  while (node->left != t->nil)                    // 그 외에는 가장 작은 값을 반환
+  while (node->left != t->nil)                      // 그 외에는 가장 작은 값을 반환
     node = node->left;
 
   return node;
 }
 
 void left_rotate(rbtree *t, node_t *node) {
-  node_t *parent = p->parent;
+  node_t *parent = node->parent;
   node_t *grand_parent = parent->parent;
 
-  node->parent = grand_parent;                    // 노드와 조부모를 양방향 연결
-  if (parent == t->root)                          // 부모가 루트일 경우 노드를 루트로 변경
+  node->parent = grand_parent;                      // 노드와 조부모를 양방향 연결
+  if (parent == t->root)                            // 부모가 루트일 경우 노드를 루트로 변경
     t->root = node;
   else if (grand_parent->left == parent)
     grand_parent->left = node;
   else
     grand_parent->right = node;
   
-  parent->parent = node;                          // 노드를 부모의 부모로 변경
-  parent->right = node->left;                     // 부모의 오른쪽 자식을 노드 왼쪽 자식으로
-  node->left->parent = parent;                    // 노드 왼쪽 자식에게 부모 양도
-  node->left = parent;                            // 부모를 노드 오른쪽 자식으로 변경
+  parent->parent = node;                            // 노드를 부모의 부모로 변경
+  parent->right = node->left;                       // 부모의 오른쪽 자식을 노드 왼쪽 자식으로
+  node->left->parent = parent;                      // 노드 왼쪽 자식에게 부모 양도
+  node->left = parent;                              // 부모를 노드 오른쪽 자식으로 변경
 }
 
 void right_rotate(rbtree *t, node_t *node) {
-  node_t *parent = p->parent;
+  node_t *parent = node->parent;
   node_t *grand_parent = parent->parent;
 
-  node->parent = grand_parent;                    // 노드와 조부모를 양방향 연결
-  if (parent == t->root)                          // 부모가 루트일 경우 노드를 루트로 변경
+  node->parent = grand_parent;                      // 노드와 조부모를 양방향 연결
+  if (parent == t->root)                            // 부모가 루트일 경우 노드를 루트로 변경
     t->root = node;
   else if (grand_parent->left == parent)
     grand_parent->left = node;
   else
     grand_parent->right = node;
 
-  parent->parent = node;                          // 노드를 부모의 부모로 변경
-  parent->left = node->right;                     // 부모의 왼쪽 자식을 노드 오른쪽 자식으로
-  node->right->parent = parent;                   // 노드 오른쪽 자식에게 부모 양도
-  node->right = parent;                           // 부모를 노드 오른쪽 자식으로 변경
+  parent->parent = node;                            // 노드를 부모의 부모로 변경
+  parent->left = node->right;                       // 부모의 왼쪽 자식을 노드 오른쪽 자식으로
+  node->right->parent = parent;                     // 노드 오른쪽 자식에게 부모 양도
+  node->right = parent;                             // 부모를 노드 오른쪽 자식으로 변경
+}
+
+void exchange_color(node_t *a, node_t *b)
+{
+  int tmp = a->color;
+  a->color = b->color;
+  b->color = (tmp == RBTREE_BLACK) ? RBTREE_BLACK : RBTREE_RED;
 }
 
 node_t *rbtree_insert_fixup(rbtree *t, node_t *node){
   node_t *parent = node->parent;
-  node_t *parent_parent = node->parent->parent;
+  node_t *grand_parent = parent->parent;
   node_t *uncle;
-  int is_left = (node == parent->left);           // 노드가 오른쪽 자식인지 판별
-  int is_parent_is_left;                          // 부모가 오른쪽 자식인지 판별
+  int is_right = (node == parent->right);           // 노드가 오른쪽 자식인지 판별
+  int is_parent_right = (parent == grand_parent->right); // 부모가 오른쪽 자식인지 판별
 
+  if (node == t->root) {                            // Const CASE 2: 노드가 루트일 경우 black이다
+    node->color = RBTREE_BLACK;
+    return;
+  }
+
+  if (parent->color == RBTREE_BLACK)                // 부모가 black인 경우 리턴
+    return;
+
+  if (is_parent_right)                              // 삼촌 노드 설정
+    uncle = grand_parent->left;
+  else
+    uncle = grand_parent->right;
+
+  if (uncle->color == RBTREE_RED) {                 // CASE 1: 삼촌이 red인 경우
+    parent->color = uncle->color = RBTREE_BLACK;    // 부모와 삼촌의 red를
+    grand_parent->color = RBTREE_RED;               // 조부모에게 떠넘긴다.
+    rbtree_insert_fixup(t, grand_parent);           // 변경된 노드를 다시 검사
+    return;
+  }
+
+  if (is_right) {                                   // CASE 2: 현재 노드가 오른쪽 자식인 경우
+    if (is_parent_right) {
+      left_rotate(t, parent);
+      exchange_color(parent, parent->left);
+    }
+    else {
+      left_rotate(t, node);
+      right_rotate(t, node);
+      exchange_color(node, node->right);
+    }
+  }
+  else{                                             // CASE 3: 현재 노드가 왼쪽 자식인 경우
+    if (is_parent_right) {
+      right_rotate(t, node);
+      left_rotate(t, node);
+      exchange_color(node, node->left);
+    }
+    else {
+      right_rotate(t, parent);
+      exchange_color(parent, parent->right);
+    }
+  }
+  
+  
 }
 
 node_t *rbtree_insert(rbtree *t, const key_t key) {
   node_t *temp = (node_t *)calloc(1, sizeof(node_t));
   node_t *node = t->root;
 
-  while (node != t->nil){
+  while (node != t->nil){                           // 노드의 자식이 비어있을 때 까지 탐색
     if (key < node->key){
       if (node->left == t->nil){
         node->left = temp;
@@ -120,13 +171,17 @@ node_t *rbtree_insert(rbtree *t, const key_t key) {
     }
   }
 
-  temp->color = RBTREE_RED;                       // 노드 생성 시 항상 red로 설정
+  temp->color = RBTREE_RED;                         // Const CASE 1 : 생성된 노드는 red다
   temp->key = key;
   temp->parent = node;
-  temp->left = temp->right = t->nil;              // 노드 생성 시 leaf를 nil 노드로 설정
+  temp->left = temp->right = t->nil;                // 노드 생성 시 leaf를 nil 노드로 설정
 
-  if (node == t->nil)                             // 비어있는 루트일 경우 노드를 루트로 설정
+  if (node == t->nil) {                             // 비어있는 루트일 경우 노드를 루트로 설정
     t->root = temp;
+    temp->color = RBTREE_BLACK;                     // 노드가 루트이므로 색을 black으로 변환 후 리턴
+    printf("SUCEESS: rbtree_build(%x)->%d\n",temp, temp->key);
+    return t->root;
+  }
 
   rbtree_insert_fixup(t, temp);
   
