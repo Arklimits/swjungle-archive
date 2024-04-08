@@ -92,9 +92,9 @@ void right_rotate(rbtree *t, node_t *node) {
 
 void exchange_color(node_t *a, node_t *b)
 {
-  int tmp = a->color;
+  int temp = a->color;
   a->color = b->color;
-  b->color = (tmp == RBTREE_BLACK) ? RBTREE_BLACK : RBTREE_RED;
+  b->color = (temp == RBTREE_BLACK) ? RBTREE_BLACK : RBTREE_RED;
 }
 
 node_t *rbtree_insert_fixup(rbtree *t, node_t *node){
@@ -199,12 +199,12 @@ node_t *rbtree_find(const rbtree *t, const key_t key) {
     }
     else if (key < node->key)
       node = node->left;
-    else if (key > node->key)
+    else
       node = node->right;
   }
 
   printf("FAILED: rbtree_find->%d\n", key);
-  return NULL;
+  return NULL;                                      // 탐색 실패 시 NULL 반환
 }
 
 node_t *rbtree_min(const rbtree *t) {
@@ -229,37 +229,32 @@ node_t *rbtree_max(const rbtree *t) {
 
 int rbtree_erase(rbtree *t, node_t *p) {
   node_t *node;
-  node_t *node_parent, *replace;
+  node_t *parent, *replace;
   int is_remove_left;
 
-  if (p->left != t->nil && p->right != t->nil) {
-    node = rbtree_travel(t, p);
-    replace = node->right;
+  if (p->left != t->nil && p->right != t->nil) {    // 자식이 둘다 있는 경우
+    node = rbtree_travel(t, p);                     // 대체 노드의 오른쪽 자식으로 대체
+    replace = node->right;                          // (대체 노드는 왼쪽 자식이 없음)
     p->key = node->key;
   }
-  else {
+  else {                                            // 자식이 하나라도 있는 경우 & 없는 경우
     node = p;
-    replace = (node->right != t->nil) ? node->right : node->left;
+    replace = (node->right != t->nil) ? node->right : node->left; // 
   }
-  node_parent = node->parent;
+  parent = node->parent;
 
-  if (node == t->root) {
+  if (node == t->root) {                            // 삭제되는 노드가 루트인 경우
     t->root = replace;
-    t->root->color = RBTREE_BLACK;
-    printf("SUCCESS: rbtree_erase(%x)->%d\n", node, node->key);
+    t->root->color = RBTREE_BLACK;                  // Const Case 2: 노드가 루트일 경우 black이다
+    printf("SUCCESS: rbtree_root_erase(%x)->%d\n", node, node->key);
     free(node);
     node=NULL;
     return 0;
   }
 
-  is_remove_left = node_parent->left == node;
-
-  if (is_remove_left)
-    node_parent->left = replace;
-  else
-    node_parent->right = replace;
-
-  replace->parent = node_parent;
+  is_remove_left = (parent->left == node);          // 부모와 자식 양방향 연결
+  (is_remove_left) ? parent->left = replace : parent->right = replace;
+  replace->parent = parent;
 
   printf("SUCCESS: rbtree_erase(%x)->%d\n", node, node->key);
   free(node);
