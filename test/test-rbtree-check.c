@@ -368,26 +368,47 @@ void test_find_erase_rand(const size_t n, const unsigned int seed) {
 }
 
 int main(void) {
+  printf("COMMAND: test_init!\n");
   test_init();
-  printf("COMPLETE: test init done!\n");
+  printf("COMPLETE: test init!\n");
+
+  printf("COMMAND: test_insert_single!\n");
   test_insert_single(1024);
   printf("COMPLETE: test_insert_single!\n");
+
+  printf("COMMAND: test_find_single!\n");
   test_find_single(512, 1024);
   printf("COMPLETE: test_find_single!\n");
+
+  printf("COMMAND: test_erase_root!\n");
   test_erase_root(128);
   printf("COMPLETE: test_erase_root!\n");
+
+  printf("COMMAND: test_erase_fixed!\n");
   test_find_erase_fixed();
   printf("COMPLETE: test_erase_fixed!\n");
+
+  printf("COMMAND: test_minmax_suite!\n");
   test_minmax_suite();
   printf("COMPLETE: test_minmax_suite!\n");
+
+  printf("COMMAND: test_to_array_suite!\n");
   test_to_array_suite();
   printf("COMPLETE: test_to_array_suite!\n");
+
+  printf("COMMAND: test_distinct_value!\n");
   test_distinct_values();
   printf("COMPLETE: test_distinct_value!\n");
+
+  printf("COMMAND: test_duplicate_values!\n");
   test_duplicate_values();
   printf("COMPLETE: test_duplicate_values!\n");
+
+  printf("COMMAND: test_multi_instance!\n");
   test_multi_instance();
-  printf("COMPLETE: test-multi_instance!\n");
+  printf("COMPLETE: test_multi_instance!\n");
+
+  printf("COMMAND: test_find_erase_rand!\n");
   test_find_erase_rand(10000, 17);
   printf("Passed all tests!\n");
 }
