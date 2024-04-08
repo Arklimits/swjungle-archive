@@ -53,42 +53,40 @@ node_t *rbtree_travel(const rbtree *t, node_t *p) {
   return node;
 }
 
-void left_rotate(rbtree *t, node_t *x) {
-  node_t *y = x->right;
+void left_rotate(rbtree *t, node_t *node) {
+  node_t *parent = p->parent;
+  node_t *grand_parent = parent->parent;
 
-  x->right = y->left;
-  if (y->left != t->nil)
-    y->left->parent = x;
-  y->parent = x->parent;
-
-  if (x->parent == t->nil)
-    t->root = y;
-  else if (x == x->parent->left)
-    x->parent->left = y;
+  node->parent = grand_parent;
+  if (parent == t->root)
+    t->root = node;
+  else if (grand_parent->left == parent)
+    grand_parent->left = node;
   else
-    x->parent->right = y;
-
-  y->left = x;
-  x->parent = y;
+    grand_parent->right = node;
+  
+  parent->parent = node;
+  parent->right = node->left;
+  node->left->parent = parent;
+  node->left = parent;
 }
 
-void right_rotate(rbtree *t, node_t *x) {
-  node_t *y = x->left;
+void right_rotate(rbtree *t, node_t *node) {
+  node_t *parent = p->parent;
+  node_t *grand_parent = parent->parent;
 
-  x->left = y->right;
-  if (y->right != t->nil)
-    y->right->parent = x;
-  y->parent = x->parent;
-
-  if (x->parent == t->nil)
-    t->root = y;
-  else if (x == x->parent->right)
-    x->parent->right = y;
+  node->parent = grand_parent;
+  if (parent == t->root)
+    t->root = node;
+  else if (grand_parent->left == parent)
+    grand_parent->left = node;
   else
-    x->parent->left = y;
+    grand_parent->right = node;
 
-  y->right = x;
-  x->parent = y;
+  parent->parent = node;
+  parent->left = node->right;
+  node->right->parent = parent;
+  node->right = parent;
 }
 
 node_t *rbtree_insert_fixup(rbtree *t, node_t *node){
