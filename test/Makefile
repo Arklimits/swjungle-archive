@@ -12,4 +12,4 @@ test-rbtree-check: test-rbtree-check.o ../src/rbtree.o
 	$(MAKE) -C ../src rbtree.o
 
 clean:
-	rm -f test-rbtree *.o
+	rm -f test-rbtree-check *.o
