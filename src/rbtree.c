@@ -97,7 +97,7 @@ void exchange_color(node_t *a, node_t *b)
   b->color = (temp == RBTREE_BLACK) ? RBTREE_BLACK : RBTREE_RED;
 }
 
-node_t *rbtree_insert_fixup(rbtree *t, node_t *node){
+void rbtree_insert_fixup(rbtree *t, node_t *node){
   node_t *parent = node->parent;
   node_t *grand_parent = parent->parent;
   node_t *uncle;
@@ -106,11 +106,11 @@ node_t *rbtree_insert_fixup(rbtree *t, node_t *node){
 
   if (node == t->root) {                            // Const CASE 2: 노드가 루트일 경우 black이다
     node->color = RBTREE_BLACK;
-    return NULL;
+    return;
   }
 
   if (parent->color == RBTREE_BLACK)                // 부모가 black인 경우 리턴
-    return NULL;
+    return;
 
   if (is_parent_right)                              // 삼촌 노드 설정
     uncle = grand_parent->left;
@@ -121,7 +121,7 @@ node_t *rbtree_insert_fixup(rbtree *t, node_t *node){
     parent->color = uncle->color = RBTREE_BLACK;    // 부모와 삼촌의 red를
     grand_parent->color = RBTREE_RED;               // 조부모에게 떠넘긴다.
     rbtree_insert_fixup(t, grand_parent);           // 변경된 노드를 다시 검사
-    return NULL;
+    return;
   }
 
   if (is_right) {                                   // CASE 2: 현재 노드가 오른쪽 자식인 경우
@@ -146,8 +146,6 @@ node_t *rbtree_insert_fixup(rbtree *t, node_t *node){
       exchange_color(parent, parent->right);
     }
   }
-
-  return NULL;
 }
 
 node_t *rbtree_insert(rbtree *t, const key_t key) {
@@ -227,10 +225,14 @@ node_t *rbtree_max(const rbtree *t) {
   return node;
 }
 
+void rbtree_erase_fixup(rbtree *t, node_t *p, int is_remove_left){
+  
+}
+
 int rbtree_erase(rbtree *t, node_t *p) {
   node_t *node;
   node_t *parent, *replace;
-  int is_remove_left;
+  int is_remove_left, is_remove_black;
 
   if (p->left != t->nil && p->right != t->nil) {    // 자식이 둘다 있는 경우
     node = rbtree_travel(t, p);                     // 대체 노드의 오른쪽 자식으로 대체
@@ -255,10 +257,12 @@ int rbtree_erase(rbtree *t, node_t *p) {
   is_remove_left = (parent->left == node);          // 부모와 자식 양방향 연결
   (is_remove_left) ? (parent->left = replace) : (parent->right = replace);
   replace->parent = parent;
-
   // printf("SUCCESS: rbtree_erase(%x)->%d\n", node, node->key);
   free(node);
   node=NULL;
+
+  if(is_remove_black)
+    rbtree_erase_fixup(t, parent, is_remove_left);
 
   return 0;
 }
