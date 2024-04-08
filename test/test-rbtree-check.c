@@ -369,15 +369,25 @@ void test_find_erase_rand(const size_t n, const unsigned int seed) {
 
 int main(void) {
   test_init();
+  printf("COMPLETE: test init done!\n");
   test_insert_single(1024);
+  printf("COMPLETE: test_insert_single!\n");
   test_find_single(512, 1024);
+  printf("COMPLETE: test_find_single!\n");
   test_erase_root(128);
+  printf("COMPLETE: test_erase_root!\n");
   test_find_erase_fixed();
+  printf("COMPLETE: test_erase_fixed!\n");
   test_minmax_suite();
+  printf("COMPLETE: test_minmax_suite!\n");
   test_to_array_suite();
+  printf("COMPLETE: test_to_array_suite!\n");
   test_distinct_values();
+  printf("COMPLETE: test_distinct_value!\n");
   test_duplicate_values();
+  printf("COMPLETE: test_duplicate_values!\n");
   test_multi_instance();
+  printf("COMPLETE: test-multi_instance!\n");
   test_find_erase_rand(10000, 17);
   printf("Passed all tests!\n");
 }

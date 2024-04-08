@@ -91,11 +91,10 @@ void right_rotate(rbtree *t, node_t *x) {
   x->parent = y;
 }
 
-node_t *rbtree_insert_fixup(const rbtree *t, node_t *node){
+node_t *rbtree_insert_fixup(rbtree *t, node_t *node){
   node_t *parent = node->parent;
   node_t *parent_parent = node->parent->parent;
 
-  while 
 }
 
 node_t *rbtree_insert(rbtree *t, const key_t key) {

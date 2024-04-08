@@ -2,11 +2,11 @@
 
 CFLAGS=-I ../src -Wall -g -DSENTINEL
 
-test: test-rbtree-check
-	./test-rbtree-check
-	valgrind ./test-rbtree-check
+test: test-rbtree
+	./test-rbtree
+	valgrind ./test-rbtree
 
-test-rbtree-check: test-rbtree-check.o ../src/rbtree.o
+test-rbtree: test-rbtree.o ../src/rbtree.o
 
 ../src/rbtree.o:
 	$(MAKE) -C ../src rbtree.o
