@@ -381,7 +381,7 @@ int main(void) {
   test_minmax_suite();
   printf("COMPLETE: test_minmax_suite!\n");
   test_to_array_suite();
-  printf("COMPLETE: test_to_arry_suite!\n");
+  printf("COMPLETE: test_to_array_suite!\n");
   test_distinct_values();
   printf("COMPLETE: test_distinct_value!\n");
   test_duplicate_values();

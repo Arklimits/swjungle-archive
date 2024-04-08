@@ -14,7 +14,7 @@ rbtree *new_rbtree(void) {
   return p;
 }
 
-void delete(rbtree *t, node_t *p){
+void delete(rbtree *t, node_t *p) {
   if (p->left != t->nil)
       delete(t, p->left);
   if (p->right != t->nil)
@@ -36,7 +36,7 @@ void delete_rbtree(rbtree *t) {
   t = NULL;
 }
 
-node_t *rbtree_travel(const rbtree *t, node_t *p){
+node_t *rbtree_travel(const rbtree *t, node_t *p) {
   node_t *node = p->right;
 
   if (node == t->nil){
@@ -53,10 +53,55 @@ node_t *rbtree_travel(const rbtree *t, node_t *p){
   return node;
 }
 
+void left_rotate(rbtree *t, node_t *x) {
+  node_t *y = x->right;
+
+  x->right = y->left;
+  if (y->left != t->nil)
+    y->left->parent = x;
+  y->parent = x->parent;
+
+  if (x->parent == t->nil)
+    t->root = y;
+  else if (x == x->parent->left)
+    x->parent->left = y;
+  else
+    x->parent->right = y;
+
+  y->left = x;
+  x->parent = y;
+}
+
+void right_rotate(rbtree *t, node_t *x) {
+  node_t *y = x->left;
+
+  x->left = y->right;
+  if (y->right != t->nil)
+    y->right->parent = x;
+  y->parent = x->parent;
+
+  if (x->parent == t->nil)
+    t->root = y;
+  else if (x == x->parent->right)
+    x->parent->right = y;
+  else
+    x->parent->left = y;
+
+  y->right = x;
+  x->parent = y;
+}
+
+node_t *rbtree_insert_fixup(const rbtree *t, node_t *node){
+  node_t *parent = node->parent;
+  node_t *parent_parent = node->parent->parent;
+
+  while 
+}
+
 node_t *rbtree_insert(rbtree *t, const key_t key) {
   node_t *temp = (node_t *)calloc(1, sizeof(node_t));
   node_t *node = t->root;
-  
+
   while (node != t->nil){
     if (key < node->key){
       if (node->left == t->nil){
@@ -82,12 +127,15 @@ node_t *rbtree_insert(rbtree *t, const key_t key) {
   if (node == t->nil)
       t->root = temp;
 
+  rbtree_insert_fixup(t, temp);
+  
   printf("SUCEESS: rbtree_insert(%x)->%d\n",temp, temp->key);
   return t->root;
 }
 
 node_t *rbtree_find(const rbtree *t, const key_t key) {
   node_t *node = t->root;
+
   while (node != t->nil){
     if (key == node->key){
       printf("SUCCESS: rbtree_find(%x)->%d\n", node, node->key);
@@ -98,6 +146,7 @@ node_t *rbtree_find(const rbtree *t, const key_t key) {
     else if (key > node->key)
       node = node->right;
   }
+
   printf("FAILED: rbtree_find->%d\n", key);
   return NULL;
 }
@@ -123,26 +172,22 @@ node_t *rbtree_max(const rbtree *t) {
 }
 
 int rbtree_erase(rbtree *t, node_t *p) {
-// TODO: implement erase
   node_t *node;
   node_t *node_parent, *replace;
-  int is_remove_black, is_remove_left;
+  int is_remove_left;
 
-  if (p->left != t->nil && p->right != t->nil)
-  {
+  if (p->left != t->nil && p->right != t->nil) {
     node = rbtree_travel(t, p);
     replace = node->right;
     p->key = node->key;
   }
-  else
-  {
+  else {
     node = p;
     replace = (node->right != t->nil) ? node->right : node->left;
   }
   node_parent = node->parent;
 
-  if (node == t->root)
-  {
+  if (node == t->root) {
     t->root = replace;
     t->root->color = RBTREE_BLACK;
     printf("SUCCESS: rbtree_erase(%x)->%d\n", node, node->key);
@@ -151,7 +196,6 @@ int rbtree_erase(rbtree *t, node_t *p) {
     return 0;
   }
 
-  is_remove_black = node->color;
   is_remove_left = node_parent->left == node;
 
   if (is_remove_left)
@@ -169,16 +213,14 @@ int rbtree_erase(rbtree *t, node_t *p) {
 }
 
 int rbtree_to_array(const rbtree *t, key_t *arr, const size_t n) {
-  // TODO: implement to_array
   node_t *node = rbtree_min(t);
   arr[0] = node->key;
 
-  for (int i=1;i<n;i++){
-    if (node == t->nil)
-      break;
+  for (int i=1;i<n;i++) {
     node = rbtree_travel(t, node);
     if (node == t->nil)
       break;
+
     arr[i] = node->key;
   }
   
