@@ -101,8 +101,6 @@ void rbtree_insert_fixup(rbtree *t, node_t *node){
   node_t *parent = node->parent;
   node_t *grand_parent = parent->parent;
   node_t *uncle;
-  int is_right = (node == parent->right);           // 노드가 오른쪽 자식인지 판별
-  int is_parent_right = (parent == grand_parent->right); // 부모가 오른쪽 자식인지 판별
 
   if (node == t->root) {                            // Const CASE 2: 노드가 루트일 경우 black이다
     node->color = RBTREE_BLACK;
@@ -111,6 +109,9 @@ void rbtree_insert_fixup(rbtree *t, node_t *node){
 
   if (parent->color == RBTREE_BLACK)                // 부모가 black인 경우 리턴
     return;
+
+  int is_right = (node == parent->right);           // 노드가 오른쪽 자식인지 판별
+  int is_parent_right = (parent == grand_parent->right); // 부모가 오른쪽 자식인지 판별
 
   if (is_parent_right)                              // 삼촌 노드 설정
     uncle = grand_parent->left;
@@ -226,7 +227,72 @@ node_t *rbtree_max(const rbtree *t) {
 }
 
 void rbtree_erase_fixup(rbtree *t, node_t *p, int is_remove_left){
+  node_t *replaced = (is_remove_left) ? p->left : p->right;
+
+  if (replaced->color == RBTREE_RED) {              // 제거된 노드가 black일 때 대체 노드가 red라면 black으로 변환
+    replaced->color = RBTREE_BLACK;
+    return;
+  }
+
+  node_t *sibling = (is_remove_left) ? p->right : p->left; // 형제 노드 설정
+
+  if (sibling->color == RBTREE_RED) {               // CASE 1: 형제 노드가 red인 경우 형제가 black 자식 노드를 가져야 하므로 부모와 색을 바꾸고 회전을 수행한다.
+    exchange_color(p, sibling);
+    if (is_remove_left)
+      left_rotate(t, sibling);
+    else
+      right_rotate(t, sibling);
+
+    rbtree_erase_fixup(t, p, is_remove_left);
+    return;
+  }
+
+  node_t *near, *away;
   
+  if (is_remove_left) {                             // 대체 노드로 부터 인접한 노드와 먼 노드 설정
+    near = sibling->left;
+    away = sibling->right;
+  }
+  else {
+    near = sibling->right;
+    away = sibling->left;
+  }
+
+  if (near->color == RBTREE_BLACK && away->color == RBTREE_BLACK) { // CASE 2: 형제 노드와 조카 노드가 모두 black인 경우 형제 노드를 red로 변환하고
+    sibling->color = RBTREE_RED;                                    //         (형제 노드가 red일 때는 이미 위에서 걸러져서 검사할 필요 X)
+
+    if (p != t->root)
+      rbtree_erase_fixup(t, p->parent, p->parent->left == p); // 부모 노드에서 다시 검사를 수행한다
+  }
+  else {
+    if (near->color == RBTREE_RED && away->color == RBTREE_BLACK) { // CASE 3: 형제 노드와 먼 노드가 black이고 인접 노드는 red인 경우
+      if (is_remove_left) {
+        exchange_color(sibling, near);                              //         형제와 가까운 노드의 색깔을 변환하고 회전을 수행한다.
+        right_rotate(t, near);
+        rbtree_erase_fixup(t, p, is_remove_left);
+      }
+      else {
+        exchange_color(sibling, near);
+        left_rotate(t, near);
+        rbtree_erase_fixup(t, p, is_remove_left);
+      }
+      return;
+    }
+
+    if (away->color == RBTREE_RED) {                // CASE 4: 형제 노드는 black이고 먼 노드가 red인 경우
+      if (is_remove_left) {
+        exchange_color(p, sibling);                 //         부모와 형제노드의 색깔을 바꾸고 회전을 수행한 후 먼 노드를 black으로 변환한다.
+        left_rotate(t, sibling);
+        away->color = RBTREE_BLACK;
+      }
+      else {
+        exchange_color(p, sibling);
+        right_rotate(t, sibling);
+        away->color = RBTREE_BLACK;
+      }
+      return;
+    }
+  }
 }
 
 int rbtree_erase(rbtree *t, node_t *p) {
@@ -254,6 +320,7 @@ int rbtree_erase(rbtree *t, node_t *p) {
     return 0;
   }
 
+  is_remove_black = node->color;
   is_remove_left = (parent->left == node);          // 부모와 자식 양방향 연결
   (is_remove_left) ? (parent->left = replace) : (parent->right = replace);
   replace->parent = parent;
@@ -261,7 +328,7 @@ int rbtree_erase(rbtree *t, node_t *p) {
   free(node);
   node=NULL;
 
-  if(is_remove_black)
+  if (is_remove_black)
     rbtree_erase_fixup(t, parent, is_remove_left);
 
   return 0;
