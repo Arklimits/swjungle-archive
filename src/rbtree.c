@@ -276,10 +276,10 @@ int rbtree_erase(rbtree *t, node_t *p) {
   if (p->left != t->nil && p->right != t->nil) {  // 자식이 둘다 있는 경우
     node = rbtree_travel(t, p);                   // 대체 노드의 오른쪽 자식으로 대체
     replace = node->right;                        // (대체 노드는 왼쪽 자식이 없음)
-    p->key = node->key;
-  } else {  // 자식이 하나라도 있는 경우 & 없는 경우
+    p->key = node->key;                           // 대체 노드의 값을 삭제 할 노드로 옮기고 대신에 node를 삭제
+  } else {                                        // 자식이 하나라도 있는 경우 & 둘다 없는 경우
     node = p;
-    replace = (node->right != t->nil) ? node->right : node->left;  //
+    replace = (node->right != t->nil) ? node->right : node->left;
   }
   parent = node->parent;
 
