@@ -226,10 +226,10 @@ void rbtree_erase_fixup(rbtree *t, node_t *p, int is_remove_left) {
 
   node_t *sibling = (is_remove_left) ? p->right : p->left;  // 형제 노드 설정
 
-  if (sibling->color == RBTREE_RED) {  // CASE 1: 형제 노드가 red인 경우 형제가 black 자식 노드를 가져야 하므로 부모와 색을 바꾸고 좌회전을 수행한다.
-    swap_color(p, sibling);
-    (is_remove_left) ?  left_rotate(t, sibling) : right_rotate(t, sibling);
-    rbtree_erase_fixup(t, p, is_remove_left);
+  if (sibling->color == RBTREE_RED) {                                       // CASE 1: 형제 노드가 red인 경우
+    swap_color(p, sibling);                                                 // 형제가 black 자식 노드를 가져야 하므로 부모와 색을 바꾸고
+    (is_remove_left) ? left_rotate(t, sibling) : right_rotate(t, sibling);  // 좌회전을 수행한 후
+    rbtree_erase_fixup(t, p, is_remove_left);                               // 다시 검사한다
     return;
   }
 
@@ -249,14 +249,14 @@ void rbtree_erase_fixup(rbtree *t, node_t *p, int is_remove_left) {
     if (p != t->root) rbtree_erase_fixup(t, p->parent, p->parent->left == p);  //         부모 노드에서 다시 검사를 수행한다
   } else {
     if (left->color == RBTREE_RED && right->color == RBTREE_BLACK) {  // CASE 3: 형제 노드와 먼 노드가 black이고 인접 노드는 red인 경우
-      swap_color(sibling, left);                                  //         형제와 가까운 노드의 색깔을 변환하고 우회전을 수행한다.
+      swap_color(sibling, left);                                      //         형제와 가까운 노드의 색깔을 변환하고 우회전을 수행한다.
       (is_remove_left) ? right_rotate(t, left) : left_rotate(t, left);
       rbtree_erase_fixup(t, p, is_remove_left);
       return;
     }
 
     if (right->color == RBTREE_RED) {  // CASE 4: 형제 노드는 black이고 먼 노드가 red인 경우
-      swap_color(p, sibling);      //         부모와 형제노드의 색깔을 바꾸고 좌회전을 수행한 후 먼 노드를 black으로 변환한다.
+      swap_color(p, sibling);          //         부모와 형제노드의 색깔을 바꾸고 좌회전을 수행한 후 먼 노드를 black으로 변환한다.
       (is_remove_left) ? left_rotate(t, sibling) : right_rotate(t, sibling);
       right->color = RBTREE_BLACK;
       return;
