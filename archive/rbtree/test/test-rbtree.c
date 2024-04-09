@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 #include <assert.h>
 #include <rbtree.h>
 #include <stdbool.h>
