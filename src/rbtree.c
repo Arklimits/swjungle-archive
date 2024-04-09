@@ -219,27 +219,23 @@ node_t *rbtree_max(const rbtree *t) {
 void rbtree_erase_fixup(rbtree *t, node_t *p, int is_remove_left) {
   node_t *replaced = (is_remove_left) ? p->left : p->right;
 
-  if (replaced->color == RBTREE_RED) {  // 제거된 노드가 black일 때 대체 노드가 red라면 black으로 변환
+  if (replaced->color == RBTREE_RED) {  // 제거된 노드가 black일 때 대체 노드가 red라면 black으로 변환하고 종료
     replaced->color = RBTREE_BLACK;
     return;
   }
 
   node_t *sibling = (is_remove_left) ? p->right : p->left;  // 형제 노드 설정
 
-  if (sibling->color == RBTREE_RED) {  // CASE 1: 형제 노드가 red인 경우 형제가 black 자식 노드를 가져야 하므로 부모와 색을 바꾸고 회전을 수행한다.
+  if (sibling->color == RBTREE_RED) {  // CASE 1: 형제 노드가 red인 경우 형제가 black 자식 노드를 가져야 하므로 부모와 색을 바꾸고 좌회전을 수행한다.
     exchange_color(p, sibling);
-    if (is_remove_left)
-      left_rotate(t, sibling);
-    else
-      right_rotate(t, sibling);
-
+    (is_remove_left) ?  left_rotate(t, sibling) : right_rotate(t, sibling);
     rbtree_erase_fixup(t, p, is_remove_left);
     return;
   }
 
   node_t *left, *right;
 
-  if (is_remove_left) {  // 대체 노드로 부터 인접한 노드와 먼 노드 설정
+  if (is_remove_left) {  // 조카 노드 설정 시 왼쪽 노드와 오른쪽 노드를 설정
     left = sibling->left;
     right = sibling->right;
   } else {
@@ -300,7 +296,7 @@ int rbtree_erase(rbtree *t, node_t *p) {
   free(node);
   node = NULL;
 
-  if (is_remove_black) rbtree_erase_fixup(t, parent, is_remove_left);
+  if (is_remove_black) rbtree_erase_fixup(t, parent, is_remove_left);  // 삭제된 노드가 검은색일 때 불균형을 수정
 
   return 0;
 }
