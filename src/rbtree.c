@@ -293,8 +293,8 @@ int rbtree_erase(rbtree *t, node_t *p) {
   }
 
   is_remove_black = node->color;
-  is_remove_left = (parent->left == node);  // 부모와 자식 양방향 연결
-  (is_remove_left) ? (parent->left = replace) : (parent->right = replace);
+  is_remove_left = (parent->left == node);                                  // 어느쪽 자식 노드를 삭제했는지 기억
+  (is_remove_left) ? (parent->left = replace) : (parent->right = replace);  // 부모와 자식 양방향 연결
   replace->parent = parent;
   // printf("SUCCESS: rbtree_erase(%p)->%d\n", node, node->key);
   free(node);
