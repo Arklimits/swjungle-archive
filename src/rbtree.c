@@ -11,7 +11,7 @@ rbtree *new_rbtree(void) {
 
   p->root = p->nil = NIL;
 
-  // printf("SUCEESS: new_rbtree(%x)\n", p);
+  // printf("SUCEESS: new_rbtree(%p)\n", p);
   return p;
 }
 
@@ -19,7 +19,7 @@ void delete(rbtree *t, node_t *p) {
   if (p->left != t->nil) delete (t, p->left);
   if (p->right != t->nil) delete (t, p->right);
 
-  // printf("SUCEESS: delete_node(%x)\n", p);
+  // printf("SUCEESS: delete_node(%p)\n", p);
   free(p);
   p = NULL;
 }
@@ -27,7 +27,7 @@ void delete(rbtree *t, node_t *p) {
 void delete_rbtree(rbtree *t) {
   if (t->root != t->nil) delete (t, t->root);
 
-  // printf("SUCEESS: delete_rbtree(%x)\n", t);
+  // printf("SUCEESS: delete_rbtree(%p)\n", t);
   free(t->nil);
   t->nil = NULL;
   free(t);
@@ -171,13 +171,13 @@ node_t *rbtree_insert(rbtree *t, const key_t key) {
   if (node == t->nil) {  // 비어있는 루트일 경우 노드를 루트로 설정
     t->root = temp;
     temp->color = RBTREE_BLACK;  // Const CASE 2: 노드가 루트일 경우 black이다
-    // printf("SUCEESS: rbtree_build(%x)->%d\n",temp, temp->key);
+    // printf("SUCEESS: rbtree_build(%p)->%d\n",temp, temp->key);
     return t->root;
   }
 
   rbtree_insert_fixup(t, temp);
 
-  // printf("SUCEESS: rbtree_insert(%x)->%d\n",temp, temp->key);
+  // printf("SUCEESS: rbtree_insert(%p)->%d\n",temp, temp->key);
   return t->root;
 }
 
@@ -186,7 +186,7 @@ node_t *rbtree_find(const rbtree *t, const key_t key) {
 
   while (node != t->nil) {
     if (key == node->key) {
-      // printf("SUCCESS: rbtree_find(%x)->%d\n", node, node->key);
+      // printf("SUCCESS: rbtree_find(%p)->%d\n", node, node->key);
       return node;
     } else if (key < node->key)
       node = node->left;
@@ -203,7 +203,7 @@ node_t *rbtree_min(const rbtree *t) {
 
   while (node->left != t->nil) node = node->left;
 
-  // printf("SUCCES: rbtree_min(%x)->%d\n", node, node->key);
+  // printf("SUCCES: rbtree_min(%p)->%d\n", node, node->key);
   return node;
 }
 
@@ -212,7 +212,7 @@ node_t *rbtree_max(const rbtree *t) {
 
   while (node->right != t->nil) node = node->right;
 
-  // printf("SUCCES: rbtree_max(%x)->%d\n", node, node->key);
+  // printf("SUCCES: rbtree_max(%p)->%d\n", node, node->key);
   return node;
 }
 
@@ -286,7 +286,7 @@ int rbtree_erase(rbtree *t, node_t *p) {
   if (node == t->root) {  // 삭제되는 노드가 루트인 경우
     t->root = replace;
     t->root->color = RBTREE_BLACK;  // Const CASE 2: 노드가 루트일 경우 black이다
-    // printf("SUCCESS: rbtree_root_erase(%x)->%d\n", node, node->key);
+    // printf("SUCCESS: rbtree_root_erase(%p)->%d\n", node, node->key);
     free(node);
     node = NULL;
     return 0;
@@ -296,7 +296,7 @@ int rbtree_erase(rbtree *t, node_t *p) {
   is_remove_left = (parent->left == node);  // 부모와 자식 양방향 연결
   (is_remove_left) ? (parent->left = replace) : (parent->right = replace);
   replace->parent = parent;
-  // printf("SUCCESS: rbtree_erase(%x)->%d\n", node, node->key);
+  // printf("SUCCESS: rbtree_erase(%p)->%d\n", node, node->key);
   free(node);
   node = NULL;
 
