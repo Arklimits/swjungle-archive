@@ -378,7 +378,7 @@ int main(void) {
     test_find_erase_rand(10000, 17);
     printf("Passed all tests!\n");
 }
-=======
+
 #include <assert.h>
 #include <rbtree.h>
 #include <stdbool.h>
@@ -762,4 +762,3 @@ int main(void) {
   test_find_erase_rand(10000, 17);
   printf("Passed all tests!\n");
 }
->>>>>>> 71bcaba38cf6792683e3af2d233b9d59dd8631cf
