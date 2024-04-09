@@ -1,9 +1,0 @@
-{
-    "files.associations": {
-        "concepts": "c",
-        "type_traits": "c",
-        "new": "c"
-    },
-    "C_Cpp.clang_format_fallbackStyle": "{ BasedOnStyle: Google, IndentWidth: 2, TabWidth: 2, ColumnLimit: 200 }",
-    "C_Cpp.clang_format_style": "{ BasedOnStyle: Google, IndentWidth: 2, TabWidth: 2, ColumnLimit: 200 }"
-}
