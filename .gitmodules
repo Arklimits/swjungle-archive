@@ -4,3 +4,6 @@
 [submodule "archive/malloc"]
 	path = archive/malloc
 	url = https://github.com/Arklimits/swjungle-malloc
+[submodule "archive/jungler_route"]
+	path = archive/jungler_route
+	url = https://github.com/Arklimits/swjungle-junglerroute.git
