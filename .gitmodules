@@ -1,9 +1,12 @@
 [submodule "archive/rbtree"]
 	path = archive/rbtree
 	url = https://github.com/Arklimits/swjungle-rbtree
+	branch = main
 [submodule "archive/malloc"]
 	path = archive/malloc
 	url = https://github.com/Arklimits/swjungle-malloc
+	branch = main
 [submodule "archive/jungler_route"]
 	path = archive/jungler_route
 	url = https://github.com/Arklimits/swjungle-junglerroute.git
+	branch = main
