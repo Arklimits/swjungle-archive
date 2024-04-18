@@ -1,3 +1,6 @@
 [submodule "archive/rbtree"]
 	path = archive/rbtree
 	url = https://github.com/Arklimits/swjungle-rbtree
+[submodule "archive/malloc"]
+	path = archive/malloc
+	url = https://github.com/Arklimits/swjungle-malloc
