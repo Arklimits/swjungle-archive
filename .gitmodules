@@ -10,6 +10,3 @@
 	path = archive/[Week00]Mini_Project(Jungler_route)
 	url = https://github.com/Arklimits/swjungle-junglerroute
 	branch = main
-[submodule "archive/webproxy"]
-	path = archive/webproxy
-	url = https://github.com/Arklimits/webproxy-lab
