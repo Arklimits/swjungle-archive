@@ -24,7 +24,7 @@
 
 ### 4페이지 과제 목표
 
-MLFQS는 Priority에 따라 여러 개의 Ready Queue가 존재하고, Priority에 영향을 주는 변수가 있어서 Priority에 실시간으로 Feedback을 줘서 조절할 수 있습니다.
+MLFQS는 Priority에 따라 여러 개의 Ready Queue가 존재하고, Priority에 영향을 주는 변수가 있어서 Feedback으로 Priority를 조절할 수 있습니다.
 저희 조는 Multi Level까지는 구현하기 힘들 것 같아서 Feedback만 구성을 해봤습니다.
 
 ************
