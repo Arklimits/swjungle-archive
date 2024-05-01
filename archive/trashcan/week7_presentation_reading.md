@@ -99,7 +99,7 @@ Advanced Scheduler에서 가장 중요한 Timer Interrupt 함수 입니다. 결�
 
 ### 15페이지 RECALCULATE RECENT CPU & PRIORITY
 
-그런데 기존에 사용하던 Ready List는 대기중인 Thread만 들어있기 때문에 모든 활성화 된 list를 새로 만들어 전체 thread, 즉 sleep 중인 thread까지 priority와 recent cpu를 계산합니다.
+그런데 기존에 사용하던 Ready List는 대기중인 Thread만 들어있기 때문에 모든 활성화 된 list를 새로 만들어 모든 thread, 즉 sleep 중인 thread까지 priority와 recent cpu를 계산합니다.
 그 외에 수정해야 하는 함수가 더 있으나 시간 관계상 설명을 생략하고 테스트 결과를 보여 드리겠습니다.
 
 ************
