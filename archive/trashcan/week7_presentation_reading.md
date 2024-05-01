@@ -93,7 +93,7 @@ NICENESS가 없는데 이는 Test Program에서 임의로 지정해줍니다.
 
 ### 14페이지 TIMER INTERRUPT
 
-Advanced Scheduler에서 가장 중요한 Timer Interrupt 함수 입니다. 먼저, Timer가 Interrupt할 때마다, 즉 1틱마다 현재 thread의 CPU 점유시간을 1씩 증가시켜줍니다. 그리고 4틱마다 CPU 점유시간, Niceness에 의해 모든 Thread의 Priority를 재계산합니다. 그리고 100틱마다 Load Average와 모든 Thread의 Recent CPU를 재조정하게 됩니다. 이 때의 재조정이 1씩 증가된 Recent CPU 값을 지수 가중 이동 평균으로 재조정하는 것입니다.
+Advanced Scheduler에서 가장 중요한 Timer Interrupt 함수 입니다. 먼저, Timer가 Interrupt할 때마다, 즉 1틱마다 현재 thread의 CPU 점유시간을 1씩 증가시켜줍니다. 그리고 4틱마다 CPU 점유시간, Niceness에 의해 모든 Thread의 Priority를 재계산합니다. 그리고 100틱마다 Load Average를 측정하고 모든 Thread의 Recent CPU를 지수 가중 이동 평균으로 재조정합니다.
 
 ************
 
