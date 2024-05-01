@@ -40,7 +40,7 @@ MLFQS는 Priority에 따라 여러 개의 Ready Queue가 존재하고, Priority�
 
 첫번째로 NICENESS가 있습니다. 이는 스레드의 젠틀함을 나타내 줍니다. 이 수치가 높으면 Priority가 줄어들어 CPU를 더 적게 점유하게 됩니다.
 두번째로 PRIORITY는 기존의 고정되거나 Donation된 태생적인 Priority가 아닌 CPU 사용량과 Niceness에 의해 결정되게 됩니다.
-세번째로 RECENT_CPU는 말 그대로 최근 CPU의 점유 TICK을 나타냅니다. 이 수치가 높으면 역시 Priorityh가 줄어들게 됩니다.
+세번째로 RECENT_CPU는 말 그대로 최근 CPU의 점유 TICK을 나타냅니다. 이 수치가 높으면 역시 Priority가 줄어들게 됩니다.
 네번째로 LOAD AVG가 있는 데 시스템의 현재 부하 상태를 나타내는 지표입니다.
 
 ************
@@ -50,7 +50,7 @@ MLFQS는 Priority에 따라 여러 개의 Ready Queue가 존재하고, Priority�
 PRIORITY, RECENT_CPU, LOAD_AVG를 구하는 식은 다음과 같습니다.
 PRIORITY는 제시된 가중치로 결정되게 되고, RECENT CPU의 경우 CPU 점유시간의 값을 지수 가중 이동 평균을 사용하여 계산하게 됩니다. LOAD AVERAGE는 1분 동안 수행 가능한 스레드의 평균 개수를 추정하는 계산식입니다.
 
-NICENESS는 Test Program에서 임의로 지정해줍니다.
+NICENESS가 없는데 이는 Test Program에서 임의로 지정해줍니다.
 
 이 때 주의해야 할 점이 있습니다. 바로 실수형이라는 것입니다. 그러나 핀토스에서는 실수를 지원하지 않습니다. 이를 위해 17.14 고정소수점 표현을 사용하게 됩니다.
 
@@ -101,12 +101,13 @@ Advanced Scheduler에서 가장 중요한 Timer Interrupt 함수 입니다. 결�
 ### 15페이지 RECALCULATE RECENT CPU & PRIORITY
 
 그런데 기존에 사용하던 Ready List는 깨어있는 Thread와 활성화 중이 아닌 thread만 들어있기 때문에 모든 활성화 된 list를 새로 만들어 전체 thread, 즉 sleep 중인 thread까지 priority와 recent cpu를 계산합니다.
+그 외에 수정해야 하는 함수가 더 있으나 시간 관계상 설명을 생략하고 테스트 결과를 보여 드리겠습니다.
 
 ************
 
 ### 16페이지 결과
 
-그 외에 수정해야 하는 함수가 더 있으나 중요한 부분이라고 여겨지지 않아 시간 관계상 생략하였으며 테스트 프로그램의 실행 결과는 0초 부터 60초 까지 활성화 되는 스레드가 점점 많아지기 때문에 60초까지는 load avg가 증가하고 180초 까지는 다시 감소하는 것을 볼 수 있었습니다.
+테스트 프로그램의 실행 결과는 0초 부터 60초 까지 활성화 되는 스레드가 점점 많아지기 때문에 60초까지는 load avg가 증가하고 180초 까지는 다시 감소하는 것을 볼 수 있었습니다.
 
 ************
 
