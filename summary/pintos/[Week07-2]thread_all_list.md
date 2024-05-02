@@ -8,6 +8,50 @@
 
 만약 `MLFQS`가 `mlfqs-load-1` 테스트는 성공했는데 `mlfqs-load-60`에서 잘 돌다가 **120초에서 뜬금없이 에러가 난다면 아주 잘 찾아왔다!**
 
+```
+Booting from Hard Disk..Kernel command line: -q -mlfqs run mlfqs-load-60
+0 ~ 9fc00 1
+100000 ~ ffe0000 1
+Pintos booting with: 
+        base_mem: 0x0 ~ 0x9fc00 (Usable: 639 kB)
+        ext_mem: 0x100000 ~ 0xffe0000 (Usable: 260,992 kB)
+Calibrating timer...  213,401,600 loops/s.
+Boot complete.
+Executing 'mlfqs-load-60':
+(mlfqs-load-60) begin
+(mlfqs-load-60) Starting 60 niced load threads...
+(mlfqs-load-60) Starting threads took 0 seconds.
+(mlfqs-load-60) After 0 seconds, load average=0.00.
+(mlfqs-load-60) After 2 seconds, load average=1.98.
+(mlfqs-load-60) After 4 seconds, load average=3.90.
+(mlfqs-load-60) After 6 seconds, load average=5.75.
+
+
+...
+
+
+(mlfqs-load-60) After 114 seconds, load average=15.30.
+(mlfqs-load-60) After 116 seconds, load average=14.80.
+(mlfqs-load-60) After 118 seconds, load average=14.30.
+(mlfqs-load-60) After 120 seconds, load average=13.83.
+Interrupt 0x0d (#GP General Protection Exception) at rip=800420830a
+ cr2=0000000000000000 error=               0
+rax cccccccccccccc4c rbx 0000000000000000 rcx 0000000000000000 rdx 00000080042ae000
+rsp 00000080042ade60 rbp 00000080042ade70 rsi 00000000666666a7 rdi cccccccccccccc4c
+rip 000000800420830a r8 0000000000000000  r9 0000000000000000 r10 0000000000000000
+r11 0000000000000000 r12 0000000000000000 r13 0000000000000000 r14 0000000000000000
+r15 0000000000000000 rflags 00000082
+es: 0010 ds: 0010 cs: 0008 ss: 0010
+Kernel PANIC at ../../threads/interrupt.c:316 in intr_handler(): Unexpected interrupt
+Call stack: 0x8004214c44 0x80042096be 0x8004209aa1 0x800420869d 0x800420e4a5 0x8004209649 0x8004209aa1 0x800420764d.
+The `backtrace' program can make call stacks useful.
+Read "Backtraces" in the "Debugging Tools" chapter
+of the Pintos documentation for more information.
+Timer: 13032 ticks
+Thread: 7000 idle ticks, 6032 kernel ticks, 0 user ticks
+```
+
+
 `Project 1`의 메인 학습 목표인 `Alarm Clock`, `Prioirty Scheduling`을 구현할 때에는 전혀 막힘이 없다. 그러나 추가적인 목표인 `Advanced Scheduler`를 구현하고자 할 때, **대기 상태의 쓰레드**들만 들어있는 `ready_list`가 아닌 **활성화 된 모든 쓰레드**가 들어있는 list의 필요성을 느끼게 되는데 그것이 바로 `all_list`이다.
 
 결론부터 말하자면, 결국 문제가 생긴다 함은 64bit로 넘어올 때 삭제 된 이 list를 다시 만들어 쓰게 되면서 무언가를 놓치게 됨으로 인해 발생하게 된다.
