@@ -1,16 +1,16 @@
-[submodule "archive/rbtree"]
+[submodule "[Week04]Rbtree_Lab"]
 	path = archive/[Week04]Rbtree_Lab
 	url = https://github.com/Arklimits/rbtree-lab
 	branch = main
-[submodule "archive/malloc"]
+[submodule "[Week05]Malloc_Lab"]
 	path = archive/[Week05]Malloc_Lab
 	url = https://github.com/Arklimits/malloc-lab
 	branch = main
-[submodule "archive/jungler_route"]
-	path = archive/[Week00]Mini_Project(Jungler_route)
+[submodule "[Week00]Mini_Project"]
+	path = archive/[Week00]Mini_Project
 	url = https://github.com/Arklimits/swjungle-junglerroute
 	branch = main
-[submodule "archive/[Week06]Webproxy_Lab"]
+[submodule "[Week06]Webproxy_Lab"]
 	path = archive/[Week06]Webproxy_Lab
 	url = https://github.com/Arklimits/webproxy-lab
     branch = main
