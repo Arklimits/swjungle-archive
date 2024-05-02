@@ -2,6 +2,7 @@
 
 다음 함수는 CPU Register를 흉내내어 만들어져 있는 구조체에서 `%rsp`를 포인터로 사용해 CPU Register로 올리는 함수이다.
 ```c
+// thread.c
 void do_iret(struct intr_frame *tf) {
     /* Structure -> CPU Register로 데이터 이동 (Load) */
     __asm __volatile(             // 입력한 그대로 사용
@@ -42,6 +43,7 @@ void do_iret(struct intr_frame *tf) {
 
 다음은 CPU Register에서 갖고 있던 Register를 구조체로 옮기는 작업을 하는 함수이다. 다른 쓰레드로 전환을 하기 때문에 현재 Register의 정보를 백업하는 것이다.
 ```c
+// thread.c
 static void thread_launch(struct thread *th) {
     uint64_t tf_cur = (uint64_t)&running_thread()->tf;
     uint64_t tf = (uint64_t)&th->tf;
@@ -137,7 +139,7 @@ static void thread_launch(struct thread *th) {
 `interrupt.h` 파일에 들어가 보면 구조체의 모양을 알 수 있다.
 
 ```c
-/* Interrupt stack frame. */
+// interrupt.h
 struct gp_registers {
     uint64_t r15;
     uint64_t r14;
@@ -164,6 +166,7 @@ struct gp_registers {
 } __attribute__((packed));
 ```
 ```c
+// interrupt.h
 struct intr_frame {
     struct gp_registers R;  // 정수 레지스터 구간
     uint16_t es;            // Extra Segment - Extra Data 영역
@@ -190,6 +193,6 @@ struct intr_frame {
     uint32_t __pad8;
 } __attribute__((packed));
 ```
-눈썰미가 좋다면 알아챘겠지만, 어셈블리 코드를 구현할 때, 이 레지스터의 모양을 해치고 않으려고 그러한 작업 순서를 갖고 있는 것이다. 이것이 연산의 속도와 관계가 있는지는 모르겠지만 말이다. (알아보고 수정하자)
+눈썰미가 좋다면 알아챘겠지만, 어셈블리 코드를 구현할 때, 이 레지스터의 모양대로 코딩한 것이다. 이렇게 했을 때 `kernel`이 `struct intr_frame`의 값을 읽거나 씀으로써 유저레벨에서 사용하던 레지스터 값을 직접 접근할 수 있다는 이점이 생긴다.
 
 또한 `rsp`가 밖에 있는 이유는 `iret` 수행 시 `qemu`가 시뮬레이션하는 `x86 Arcitecture`의 매뉴얼에 현재 `stack`에 `rip,cs,eflags,rsp,ss`가 순서대로 있어야 한다고 적혀있기 때문에 그와 맞춰주기 때문이다.
