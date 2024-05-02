@@ -6,10 +6,6 @@
 	path = archive/[Week05]Malloc_Lab
 	url = https://github.com/Arklimits/malloc-lab
 	branch = main
-[submodule "[Week00]Mini_Project"]
-	path = archive/[Week00]Mini_Project
-	url = https://github.com/Arklimits/swjungle-junglerroute
-	branch = main
 [submodule "[Week06]Webproxy_Lab"]
 	path = archive/[Week06]Webproxy_Lab
 	url = https://github.com/Arklimits/webproxy-lab
