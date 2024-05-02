@@ -7,7 +7,7 @@ void do_iret(struct intr_frame *tf) {
     __asm __volatile(             // 입력한 그대로 사용
         "movq %0, %%rsp\n"        // 인자 *tf의 주소를 RSP에 저장
 ```
-이 때, `%0`을 처음보게 되어 무슨 뜻인지 몰랐었는데, 이는 `input operands`로 들어온 0번째 인자를 가리키게 되며 컴파일러는 먼저 가서 확인 한 후 돌아와 할당하게 된다.
+이 때, `%0`을 처음보게 되어 무슨 뜻인지 몰랐었는데, 이는 `input operands`로 들어온 **0번째 인자**를 가리키게 되며 컴파일러는 먼저 가서 확인 한 후 돌아와 할당하게 된다.
 ```c
         "movq 0(%%rsp),%%r15\n"   // rsp위치의 값(stack 시작)을 레지스터 r15에 저장
         "movq 8(%%rsp),%%r14\n"   // rsp+8위치의 값을 레지스터 r14에 저장
@@ -36,7 +36,7 @@ void do_iret(struct intr_frame *tf) {
         : "memory");
 }
 ```
-이 때, `iret`은 `%rsp`를 기준으로 나머지 정보들을 `atomic`하게 register에 한방에 등록해주고 `return`한다. 그렇지 않다면 복원 중간에 `rsp`나 `rip` 둘중 하나가 먼저 바뀔텐데, `rip`가 먼저 바뀌면 `rsp`가 복원되기 전에 유저 레벨 프로그램이 실행될 것이고, `rsp`가 먼저 복원되면 `rip`가 저장되어 있는 커널 스택이 아닌 유저 스택에서 값을 읽어오게 되어 틀린 행동을 하게 될 것이다.
+이 때, `iret`은 `%rsp`를 기준으로 나머지 정보들을 **`atomic`하게 register에 한번에 등록**해주고 `return`한다. 그렇지 않다면 복원 중간에 `rsp`나 `rip` 둘중 하나가 먼저 바뀔텐데, `rip`가 먼저 바뀌면 `rsp`가 복원되기 전에 유저 레벨 프로그램이 실행될 것이고, `rsp`가 먼저 복원되면 `rip`가 저장되어 있는 커널 스택이 아닌 유저 스택에서 값을 읽어오게 되어 틀린 행동을 하게 될 것이다.
 
 <br>
 
@@ -78,7 +78,7 @@ static void thread_launch(struct thread *th) {
         "pop %%rbx\n"               // Stack에 저장된 rax의 값을 rbx 위치에 복원
         "movq %%rbx, 112(%%rax)\n"  // 레지스터 rbx의 값을 rax+112 위치에 저장
 ```
-`stack`에 넣어 놓았던 정보를 다시 `rbx`에 담아서 구조체에 담는 작업을 한다. 왜 굳이 이렇게 했냐고 한다면 이는 코드 분석 후에 따로 하겠다.
+`stack`에 넣어 놓았던 정보를 다시 `rbx`에 담아서 구조체에 담는 작업을 한다. **왜 굳이** 이렇게 했냐고 한다면 이는 코드 분석 후에 따로 하겠다.
 ```c
         "addq $120, %%rax\n"        // 레지스터 rax의 위치를 정수 레지스터 다음으로 이동 rax->es
         "movw %%es, (%%rax)\n"      // es값을 rax의 위치(es)에 저장
@@ -95,7 +95,7 @@ static void thread_launch(struct thread *th) {
         "addq $(out_iret -  __next), %%rbx\n"
         "movq %%rbx, 0(%%rax)\n"               // rbx의 위치를 rax+0(rip)에 저장
 ```
-`rbx`의 위치에 `(out_iret - __next)`의 값을 더해주게 되는데 `out_iret` 또한 레이블이기 때문에 `rbx`에는 `out_iret` 이후 `line`의 `address`가 들어가게 된다. 이를 백업하는 구조체의 `rip`에 담아 놓으면 이 쓰레드가 재개되었을 때 `out_iret` 이후부터 재개할 것이다. 이 또한 왜 굳이 이렇게 만들었나에 대한 의문이 생길 수 있는데, 이것도 앞의 것과 같이 설명하겠다.
+`rbx`의 위치에 `(out_iret - __next)`의 값을 더해주게 되는데 `out_iret` 또한 레이블이기 때문에 `rbx`에는 `out_iret` 이후 `line`의 `address`가 들어가게 된다. 이를 **백업하는 구조체의 `rip`에 담아 놓으면 이 쓰레드가 재개되었을 때 `out_iret` 이후부터 재개**할 것이다. 이 또한 왜 굳이 이렇게 만들었나에 대한 의문이 생길 수 있는데, 이것도 앞의 것과 같이 설명하겠다.
 ```c
         
         "movw %%cs, 8(%%rax)\n"                // 레지스터 cs의 값을 rax+8(cs)에 저장
@@ -124,7 +124,7 @@ static void thread_launch(struct thread *th) {
 
 **********************
 
-자, 이제 저장할 때 왜 저런 모양인지 살펴보자.
+자, 이제 데이터를 백업할 때 왜 저런 모양인지 살펴보자.
 ```c
 "pop %%rbx\n"               // Stack에 저장된 rcx의 값을 rbx 위치에 복원
 "movq %%rbx, 96(%%rax)\n"   // 레지스터 rbx의 값을 rax+96 위치에 저장
@@ -132,7 +132,7 @@ static void thread_launch(struct thread *th) {
 ```c
 "addq $(out_iret -  __next), %%rbx\n"
 ```
-이 형태가 굳이 이런 형태를 띄고 있는 이유는 1가지 밖에 없다.
+이 형태가 굳이 이런 형태를 띄고 있는 이유는 **1가지** 밖에 없다.
 
 `interrupt.h` 파일에 들어가 보면 구조체의 모양을 알 수 있다.
 
