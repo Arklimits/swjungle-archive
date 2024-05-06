@@ -56,7 +56,7 @@ Thread: 7000 idle ticks, 6032 kernel ticks, 0 user ticks
 
 결론부터 말하자면, 결국 문제가 생긴다 함은 64bit로 넘어올 때 삭제 된 이 list를 다시 만들어 쓰게 되면서 무언가를 놓치게 됨으로 인해 발생하게 된다.
 
-***바로 `thread exit` 함수와 `Dangling Pointer`다.***
+***바로 `thread exit()` 함수와 `Dangling Pointer`다.***
 
 아마 `all_list`와 `all_list_elem`를 `thread structure`에 삽입하고 사용하는 것은 잘 했으리라고 믿는다.
 
@@ -151,3 +151,5 @@ static void load_thread(void *aux UNUSED) {
     timer_sleep(exit_time - timer_elapsed(start_time));
 }
 ```
+
+malloc 과제에서 그렇게 강조했던 dangling pointer를 직접 겪어봄으로써 그 중요성을 다시 한번 상기했고, 생성했다면 사용하는 부분을 만들기 전에 삭제부터 고려하고 만들어야 겠다는 생각을 하게 되었다.
