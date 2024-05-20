@@ -1,4 +1,4 @@
-# MLFQS를 구현함에 있어 `All List`에 관하여 (feat. dangling pointer)
+# MLFQS를 구현함에 있어 `All List`에 관하여 `(feat. dangling pointer)`
 
 먼저 사전에 알아야 하는 점이 있다. 바로 Pintos 학습자료가 32bit와 64bit로 나뉘어져 있다는 것이다. 아직까지 일부분만 학습하여 32bit와 64bit Pintos의 차이를 전부 알지는 못하지만 `thread`부분에서 체감할 수 있는 부분이 있었다.
 
