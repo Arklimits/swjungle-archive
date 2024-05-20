@@ -12,16 +12,16 @@ Calibrating timer...  209,715,200 loops/s.
 ```
 // EC2
 Calibrating timer...  129,638,400 loops/s
-```
 
-```
 // WSL
 Calibrating timer...  314,163,200 loops/s.
 ```
 
-이 때문에 보통 프로그램이 허술하면 `EC2`에서는 아무런 문제없이 도는데 `Docker`나 `WSL`에서는 `Fault` 발생한다.
+이 때문에 보통 프로그램이 허술하면 `EC2`에서는 아무런 문제없이 도는데 `Docker`나 `WSL`에서는 `fault`가 발생한다.
 
-단적인 예로 `Project 2` 시작할 때 `EC2`에서는 아무런 설정을 안해도 그냥 `Test Case`가 정상적으로 동작하는데 `Docker`에서는 `intr_yield_on_return` 함수를 추가해주지 않으면 동작하지 않는다.
+결론부터 말하자면 `EC2`는 **성능이 구려서** 사이사이에 일어날 수 있는 잔 버그나 예외 상황이 잘 발생을 하지 않는다.
+
+단적인 예로 `Project 2` 시작할 때 `EC2`에서는 아무런 설정을 안해도 그냥 `Test Case`가 정상적으로 동작하는데 `Docker`나 `WSL`에서는 `intr_yield_on_return` 함수를 추가해주지 않으면 동작하지 않는다.
 
 ```c
 void test_max_priority(void) {
@@ -114,4 +114,4 @@ done:
 }
  ```
 
- 나중에 알고보니 디스크상의 `inode`는 종류, 권한, 타임스탬프 등과 같은 파일의 지속적인 속성을 기록하기 때문에 `close`를 제외한 `filesystem` 접근은 `lock`을 걸어주는게 맞다고 한다...
+ 나중에 알고보니 디스크상의 `inode`는 종류, 권한, 타임스탬프 등과 같은 파일의 지속적인 속성을 기록하기 때문에 `close`를 제외한 `filesystem` 접근은 `lock`을 걸어주는게 좋다고 한다...
