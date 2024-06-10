@@ -13,3 +13,9 @@
 [submodule "[Week00]Mini_Project"]
 	path = archive/[Week00]Mini_Project
 	url = https://github.com/Arklimits/swjungle-junglerroute
+[submodule "[Week07]Pintos_Lab"]
+	path = archive/[Week07]Pintos_Lab
+	url = https://github.com/Arklimits/Pintos-KAIST
+[submodule "[Week13]Spring_Prac"]
+	path = archive/[Week13]Spring_Prac
+	url = https://github.com/Arklimits/swjungle-spring
