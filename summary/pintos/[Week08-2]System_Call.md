@@ -3,7 +3,7 @@
 
 추천하는 방식은
 
-> 1️⃣ #3 System Call -> #5 File Descriptor -> #4. Hierarchical Process Structure
+> 1️⃣ #3 System Call -> #5 File Descriptor -> #4. Hierarchical Process Structure  
 > 2️⃣ File related -> Process related
 
 1번은 한양대 강의자료의 순서를 구현하기 쉽게 임의로 바꾼 것이고,
